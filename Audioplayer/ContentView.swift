@@ -6,18 +6,28 @@
 //
 
 import SwiftUI
+import AVKit
+
+
 
 struct ContentView: View {
     
     @State private var volume: Double = 0.0
     @State private var isEditing: Bool = false
     @State private var isPlaying: Bool = false
+    @State private var audioPlayer: AVAudioPlayer!
     
     var body: some View {
         VStack {
             Button {
                 //action
                 isPlaying.toggle()
+                if isPlaying {
+                    self.audioPlayer.play()
+                } else {
+                    self.audioPlayer.pause()
+                }
+                
             } label: {
                 if isPlaying {
                     Image(systemName: "pause.fill")
@@ -30,6 +40,11 @@ struct ContentView: View {
                 }
             }
             .padding(.bottom, 50)
+            .onAppear {
+                let sound = Bundle.main.path(forResource: "", ofType: "mp3")
+                self.audioPlayer = try! AVAudioPlayer(contentsOf: URL(fileURLWithPath: sound!))
+            }
+            //volume show
             Slider(
                 value: $volume,
                 in: 0 ... 100,
